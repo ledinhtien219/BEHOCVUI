@@ -2,7 +2,7 @@ var $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelector
 const KEY='behocvui-v3';
 let old={};
 try{old=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){old={}}
-const state={grade:old.grade||'2',stars:old.stars??320,mathDone:old.mathDone??3,viDone:old.viDone??3,games:old.games??8,streak:old.streak??3};
+const state={grade:old.grade||'2',stars:old.stars??320,mathDone:old.mathDone??3,viDone:old.viDone??3,games:old.games??8,streak:old.streak??3,childName:old.childName||'Minh',audioEnabled:typeof old.audioEnabled==='boolean'?old.audioEnabled:true};
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
 const math=[
 ['Các số đến 1000','Đọc, viết, so sánh và cấu tạo số','🔢'],
