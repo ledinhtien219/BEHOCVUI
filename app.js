@@ -1,4 +1,4 @@
-var $=(s,r=document)=>r.querySelector(s), $=(s,r=document)=>[...r.querySelectorAll(s)];
+window.$=(s,r=document)=>r.querySelector(s); window.$=(s,r=document)=>[...r.querySelectorAll(s)];
 const KEY='behocvui-v3';
 let old={};
 try{old=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){old={}}
@@ -107,4 +107,3 @@ function english(){modal('🇬🇧 Tiếng Anh','<p>Tiếng Anh lớp 1–2: ngh
 function bind(){
 $$('[data-a="home"]').forEach(b=>b.onclick=home);$$('[data-a="grades"]').forEach(b=>b.onclick=grades);$$('[data-a="games"]').forEach(b=>b.onclick=()=>game('math'));$$('[data-a="reward"]').forEach(b=>b.onclick=reward);$$('[data-a="report"]').forEach(b=>b.onclick=report);$$('[data-a="library"]').forEach(b=>b.onclick=library);$$('[data-a="english"]').forEach(b=>b.onclick=english);$$('[data-s="math"]').forEach(b=>b.onclick=()=>subject('math'));$$('[data-s="vi"]').forEach(b=>b.onclick=()=>subject('vi'))}
 home();
-if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
