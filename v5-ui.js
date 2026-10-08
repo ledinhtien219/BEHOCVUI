@@ -12,27 +12,28 @@ var V5LESSON_ART={
  ]
 };
 function v5Art(type,i){
- var a=V5LESSON_ART[type][i]||['🎯','⭐','123'];
- return '<div class="v5-art-scene '+type+'"><span class="v5-cloud c1"></span><span class="v5-cloud c2"></span><span class="v5-art-big">'+a[0]+'</span><span class="v5-art-small">'+a[1]+'</span><b>'+a[2]+'</b><i></i></div>';
+ var art=type==='vi'?'reading-art':['math-art','addition-art','addition-art','subtraction-art','subtraction-art','multiplication-art','multiplication-art','multiplication-art','geometry-art','geometry-art','geometry-art','practice-art','practice-art','game-art'][i]||'math-art';
+ return '<div class="lesson-illustration '+type+'"><img src="assets/'+art+'.webp" alt=""></div>';
 }
-function rows(type,list,done,practice){
- return '<div class="curriculum-note v5-note">🌟 <b>'+(practice?'Luyện tập bằng hình ảnh & thao tác':'Chọn một bài để bắt đầu')+'</b><span> • Nội dung mở dần theo tiến độ của bé.</span></div><div class="v5-lesson-grid">'
+function rows(type,list,done,practice,indices){
+ return '<div class="curriculum-note v5-note">'+uiIcon('star')+' <b>'+(practice?'Luyện tập bằng hình ảnh & thao tác':'Chọn một bài để bắt đầu')+'</b><span> · Nội dung mở dần theo tiến độ của bé.</span></div><div class="v5-lesson-grid">'
  +list.map(function(x,i){
+   i=indices?indices[i]:i;
    var locked=i>done,doneIt=i<done;
    return '<button class="v5-lesson-card '+type+' '+(locked?'locked ':'')+(doneIt?'completed':'')+'" data-lesson="'+i+'" data-type="'+type+'" '+(locked?'data-locked="1"':'')+'>'
-   +'<div class="v5-card-art">'+v5Art(type,i)+'<span class="v5-number">Bài '+(i+1)+'</span>'+(locked?'<span class="v5-lock">🔒</span>':'')+'</div>'
+   +'<div class="v5-card-art">'+v5Art(type,i)+'<span class="v5-number">Bài '+(i+1)+'</span>'+(locked?'<span class="v5-lock" aria-label="Chưa mở">'+uiIcon('lock')+'</span>':'')+'</div>'
    +'<div class="v5-card-copy"><strong>'+(practice?'Luyện tập: ':'')+x[0]+'</strong><small>'+(practice?'5 câu • nhiều dạng tương tác':x[1])+'</small>'
-   +'<div class="v5-card-foot"><span>'+(doneIt?'⭐⭐⭐':locked?'Chưa mở':'⭐☆☆')+'</span><em>'+(locked?'Học bài trước':'Học ngay ›')+'</em></div></div></button>';
+   +'<div class="v5-card-foot"><span class="lesson-stars">'+(locked?'Chưa mở':uiIcon('star')+uiIcon('star')+uiIcon('star'))+'</span><em>'+(locked?'Học bài trước':'Học ngay ›')+'</em></div></div></button>';
  }).join('')+'</div>';
 }
 function gameCards(type,done){
- var games=gameData[type];
- return '<div class="curriculum-note v5-note">🎮 <b>Mini game theo đúng kỹ năng đã học</b><span> • Mỗi game là một scene trực quan.</span></div><div class="v5-game-grid">'
+ var games=V4GAMES[type];
+ return '<div class="curriculum-note v5-note">'+uiIcon('game')+' <b>Mini game theo đúng kỹ năng đã học</b><span> · Mỗi game là một scene trực quan.</span></div><div class="v5-game-grid">'
  +games.map(function(g,i){
    var locked=done<g[2],scene=type==='math'?[['🏎️','➕','🏁'],['🎈','12','🎯'],['🧩','🔺','🟦'],['🗺️','📏','⭐']][i]:[['🐝','A','B'],['🧩','con','🐱'],['🔎','✍️','✅'],['📚','🐰','🌳']][i];
-   return '<button class="v5-game-card '+(locked?'locked':'')+'" data-game="'+type+'" '+(locked?'data-locked="1"':'')+'>'
-   +'<div class="v5-game-scene"><span>'+scene[0]+'</span><b>'+scene[1]+'</b><i>'+scene[2]+'</i><u></u></div>'
-   +'<strong>'+g[0]+'</strong><small>'+(locked?'Mở sau bài '+g[2]:'Chơi 5 vòng • nhận sao')+'</small><em>'+(locked?'🔒':'Chơi ngay ›')+'</em></button>';
+   return '<button class="v5-game-card '+(locked?'locked':'')+'" data-game="'+type+'" data-variant="'+g[3]+'" '+(locked?'data-locked="1"':'')+'>'
+   +'<div class="game-illustration"><img src="assets/'+(type==='math'?['race-art','game-art','geometry-art','practice-art'][i]:['letters-art','words-art','reading-art','girl-story'][i])+'.webp" alt=""></div>'
+   +'<strong>'+g[0]+'</strong><small>'+(locked?'Mở sau bài '+g[2]:'Chơi 5 vòng · nhận sao')+'</small><em>'+(locked?uiIcon('lock'):'Chơi ngay ›')+'</em></button>';
  }).join('')+'</div>';
 }
 function v5QuestionVisual(q,type,index){

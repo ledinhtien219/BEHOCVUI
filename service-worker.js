@@ -1,7 +1,5 @@
-self.addEventListener('install',function(){self.skipWaiting()});
-self.addEventListener('activate',function(e){e.waitUntil((async function(){
-  const keys=await caches.keys(); await Promise.all(keys.map(function(k){return caches.delete(k)}));
-  await self.registration.unregister();
-  const clientsList=await self.clients.matchAll({type:'window'}); clientsList.forEach(function(c){c.navigate(c.url)});
-})())});
-self.addEventListener('fetch',function(){});
+const CACHE='be-hoc-vui-reference-v9';
+const ASSETS=["./","./index.html","./styles.css?v=9","./v4.css?v=9","./tablet-ui.css?v=9","./app.js?v=9","./v4-bootstrap.js?v=9","./v4-data-math.js?v=9","./v4-data-vi.js?v=9","./v5-ui.js?v=9","./v4-exercise.js?v=9","./v4-games.js?v=9","./tablet-ui.js?v=9","./v6-init.js?v=9","./manifest.webmanifest","./icon.svg","./assets/addition-art.webp","./assets/avatar.webp","./assets/english-art.webp","./assets/friends-story.webp","./assets/game-art.webp","./assets/garden.webp","./assets/geometry-art.webp","./assets/girl-story.webp","./assets/home-friends.webp","./assets/letters-art.webp","./assets/math-art.webp","./assets/multiplication-art.webp","./assets/practice-art.webp","./assets/rabbit-story.webp","./assets/race-art.webp","./assets/reading-art.webp","./assets/reward-art.webp","./assets/robot-art.webp","./assets/subtraction-art.webp","./assets/tree-story.webp","./assets/vietnamese-art.webp","./assets/words-art.webp"];
+self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))});
+self.addEventListener('activate',e=>{e.waitUntil(Promise.all([self.clients.claim(),caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))]))});
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return r}).catch(()=>caches.match(e.request)))});
