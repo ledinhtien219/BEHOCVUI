@@ -1,5 +1,6 @@
 /* production-safe boot */
 (function(){
+  if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister()})}).catch(function(){})}
   function showBootError(err){
     var root=document.getElementById('app');
     if(!root)return;
