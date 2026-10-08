@@ -19,6 +19,18 @@ function v4BindQuestion(q){
  $$('[data-order-item]').forEach(function(b){b.onclick=function(){if(s.locked||b.disabled)return;s.selected.push(b.dataset.value);b.disabled=true;b.classList.add('used');v4OrderResult()}});if($('[data-order-reset]'))$('[data-order-reset]').onclick=function(){s.selected=[];$$('[data-order-item]').forEach(function(x){x.disabled=false;x.classList.remove('used')});v4OrderResult()};if($('[data-submit-order]'))$('[data-submit-order]').onclick=function(){var ok=JSON.stringify(s.selected)===JSON.stringify(q.answer);$('#orderResult').classList.add(ok?'correct':'wrong');v4FinishQuestion(ok,ok?'Thứ tự chính xác!':'Thứ tự đúng: '+q.answer.join(' → '))};
 }
 function v4OrderResult(){var b=$('#orderResult');if(!b)return;b.innerHTML=V4SESSION.selected.length?V4SESSION.selected.map(function(x){return '<span>'+v4Esc(x)+'</span>'}).join('<b>→</b>'):'<span>Chạm các thẻ theo thứ tự đúng</span>'}
-function v4FinishQuestion(ok,msg){var s=V4SESSION;if(s.locked)return;s.locked=true;if(ok){s.correct++;s.earned+=2;state.stars+=2;save()}var f=$('#feedback');f.hidden=false;f.className='feedback-box '+(ok?'ok':'no');f.innerHTML='<div><b>'+(ok?'🎉 Chính xác!':'💡 Cùng xem lại nhé!')+'</b><span>'+v4Esc(msg)+'</span></div><button data-next-question>'+(s.current===4?'Xem kết quả':'Câu tiếp theo')+' ›</button>';$('[data-next-question]').onclick=function(){if(s.current<4){s.current++;s.locked=false;v4ExerciseFrame()}else v4FinishLesson()}}
+function v4AdvanceQuestion(){
+ var s=V4SESSION;if(!s)return;
+ if(s.current<4){s.current++;s.locked=false;v4ExerciseFrame()}else v4FinishLesson();
+}
+function v4FinishQuestion(ok,msg){
+ var s=V4SESSION;if(s.locked)return;s.locked=true;
+ if(ok){s.correct++;s.earned+=2;state.stars+=2;save()}
+ var f=$('#feedback');f.hidden=false;f.className='feedback-box '+(ok?'ok':'no');
+ var delay=ok?850:1250;
+ f.innerHTML='<div><b>'+(ok?'🎉 Chính xác!':'💡 Cùng xem lại nhé!')+'</b><span>'+v4Esc(msg)+'</span></div><div class="auto-next"><span>Tự chuyển câu</span><i style="--delay:'+delay+'ms"></i></div>';
+ clearTimeout(s.autoTimer);
+ s.autoTimer=setTimeout(v4AdvanceQuestion,delay);
+}
 function v4FinishLesson(){var s=V4SESSION,passed=s.correct>=3,score=s.correct===5?3:s.correct>=3?2:1,key=s.type+'-'+s.index;state.best[key]=Math.max(state.best[key]||0,score);if(passed){if(s.type==='math')state.mathDone=Math.max(state.mathDone,s.index+1);else state.viDone=Math.max(state.viDone,s.index+1)}save();var name=s.type==='math'?'Toán':'Tiếng Việt',accent=s.type==='math'?'blue':'pink';$('#app').innerHTML='<main class="result-page page-enter '+accent+'">'+top(name+' - Hoàn thành bài',accent)+'<section class="result-card"><div class="result-star">'+(passed?'🌟':'💪')+'</div><h1>'+(passed?'Hoàn thành bài học!':'Con đã rất cố gắng!')+'</h1><p>Con trả lời đúng <b>'+s.correct+'/5 câu</b> và nhận <b>+'+s.earned+' ⭐</b>.</p><div class="big-stars">'+'⭐'.repeat(score)+'☆'.repeat(3-score)+'</div><div class="result-stats"><div><b>'+s.correct+'</b><span>Câu đúng</span></div><div><b>'+s.earned+'</b><span>Sao nhận</span></div><div><b>'+(passed?'Đã mở':'Chưa mở')+'</b><span>Bài tiếp</span></div></div><div class="result-actions"><button data-retry>Học lại</button><button class="primary-btn" data-back-subject>Về '+name+'</button></div></section></main>';bind();$('[data-retry]').onclick=function(){exercise(s.type,s.index)};$('[data-back-subject]').onclick=function(){subject(s.type)}}
 function v4Speak(text){if(!('speechSynthesis' in window))return toast('Thiết bị chưa hỗ trợ đọc tiếng Việt.');speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang='vi-VN';u.rate=.78;u.pitch=1.05;speechSynthesis.speak(u)}
