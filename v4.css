@@ -50,3 +50,5 @@
  .hotspot:hover,.lesson-row:hover,.v5-lesson-card:hover{transform:none}
  button{-webkit-tap-highlight-color:transparent}
 }
+
+.boot-loading{min-height:100vh;display:grid;place-items:center;font:900 22px Nunito,system-ui,sans-serif;color:#2d6891;background:linear-gradient(#7ad7ff,#dff8ff 58%,#87dd6d)}

@@ -1,8 +1,9 @@
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const KEY='behocvui-v3';
-const old=JSON.parse(localStorage.getItem(KEY)||'{}');
+let old={};
+try{old=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){old={}}
 const state={grade:old.grade||'2',stars:old.stars??320,mathDone:old.mathDone??3,viDone:old.viDone??3,games:old.games??8,streak:old.streak??3};
-const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
 const math=[
 ['Các số đến 1000','Đọc, viết, so sánh và cấu tạo số','🔢'],
 ['Cộng không nhớ trong phạm vi 1000','Tính nhẩm và đặt tính','➕'],
