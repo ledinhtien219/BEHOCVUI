@@ -1,4 +1,4 @@
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+var $=(s,r=document)=>r.querySelector(s), $=(s,r=document)=>[...r.querySelectorAll(s)];
 const KEY='behocvui-v3';
 let old={};
 try{old=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){old={}}
